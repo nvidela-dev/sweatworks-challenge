@@ -7,3 +7,9 @@ export type {
   ApiErrorResponse,
   ApiResponse,
 } from './api.types.js';
+
+export type {
+  MemberResponse,
+  MemberListResponse,
+  MemberDetailResponse,
+} from './member.types.js';
