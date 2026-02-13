@@ -29,8 +29,18 @@ export const createMembershipSchema = z
     }
   );
 
+const notInFutureDate = dateStringSchema.refine(
+  (dateStr) => {
+    const date = new Date(dateStr);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date <= today;
+  },
+  { message: 'Cancellation date cannot be in the future' }
+);
+
 export const cancelMembershipSchema = z.object({
-  cancelledAt: dateStringSchema.optional(),
+  cancelledAt: notInFutureDate.optional(),
 });
 
 export const membershipQuerySchema = paginationSchema.extend({

@@ -52,3 +52,16 @@ export type {
   MembershipIdParam,
   MemberMembershipParams,
 } from './membership.schema.js';
+
+export {
+  createCheckInSchema,
+  checkInQuerySchema,
+  checkInIdParamSchema,
+  memberCheckInParamsSchema,
+} from './check-in.schema.js';
+export type {
+  CreateCheckInInput,
+  CheckInQuery,
+  CheckInIdParam,
+  MemberCheckInParams,
+} from './check-in.schema.js';
