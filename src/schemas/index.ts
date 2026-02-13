@@ -21,3 +21,16 @@ export type {
   MemberQuery,
   MemberIdParam,
 } from './member.schema.js';
+
+export {
+  createPlanSchema,
+  updatePlanSchema,
+  planQuerySchema,
+  planIdParamSchema,
+} from './plan.schema.js';
+export type {
+  CreatePlanInput,
+  UpdatePlanInput,
+  PlanQuery,
+  PlanIdParam,
+} from './plan.schema.js';
