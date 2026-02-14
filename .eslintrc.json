@@ -23,9 +23,7 @@
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/consistent-type-imports": "error",
     "import/prefer-default-export": "off",
-    "import/extensions": "off",
-    "@typescript-eslint/no-redeclare": "off",
-    "@typescript-eslint/no-namespace": "off"
+    "import/extensions": "off"
   },
   "overrides": [
     {
