@@ -25,3 +25,9 @@ export type {
   MembershipListResponse,
   MembershipDetailResponse,
 } from './membership.types.js';
+
+export type {
+  CheckInResponse,
+  CheckInListResponse,
+  CheckInDetailResponse,
+} from './check-in.types.js';
