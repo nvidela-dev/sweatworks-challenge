@@ -1,3 +1,5 @@
+import type { ApiError } from './error.types.js';
+
 export interface PaginationMeta {
   page: number;
   pageSize: number;
@@ -15,7 +17,7 @@ export interface ApiSuccessResponse<T> {
 
 export interface ApiErrorResponse {
   success: false;
-  error: import('./error.types.js').ApiError;
+  error: ApiError;
 }
 
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
