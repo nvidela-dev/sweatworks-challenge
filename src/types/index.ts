@@ -13,3 +13,9 @@ export type {
   MemberListResponse,
   MemberDetailResponse,
 } from './member.types.js';
+
+export type {
+  PlanResponse,
+  PlanListResponse,
+  PlanDetailResponse,
+} from './plan.types.js';
