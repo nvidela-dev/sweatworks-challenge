@@ -34,3 +34,21 @@ export type {
   PlanQuery,
   PlanIdParam,
 } from './plan.schema.js';
+
+export {
+  MEMBERSHIP_STATUSES,
+  membershipStatusSchema,
+  createMembershipSchema,
+  cancelMembershipSchema,
+  membershipQuerySchema,
+  membershipIdParamSchema,
+  memberMembershipParamsSchema,
+} from './membership.schema.js';
+export type {
+  MembershipStatus,
+  CreateMembershipInput,
+  CancelMembershipInput,
+  MembershipQuery,
+  MembershipIdParam,
+  MemberMembershipParams,
+} from './membership.schema.js';
