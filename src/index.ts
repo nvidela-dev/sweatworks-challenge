@@ -1,6 +1,8 @@
 import { env } from './config/env.js';
+import { createApp } from './app.js';
 
-console.log(`Starting server in ${env.NODE_ENV} mode...`);
-console.log(`Server will run on port ${env.PORT}`);
+const app = createApp();
 
-// Express app setup will be added in PR #4
+app.listen(env.PORT, () => {
+  console.log(`Server running in ${env.NODE_ENV} mode on port ${env.PORT}`);
+});
