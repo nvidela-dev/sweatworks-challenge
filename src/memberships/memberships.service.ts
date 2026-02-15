@@ -5,8 +5,8 @@ import type { PaginationMeta } from '../types/api.types.js';
 import { HttpError } from '../types/http-error.js';
 import { ErrorCode } from '../types/error.types.js';
 import { membershipsRepository } from './memberships.repository.js';
-import { membersRepository } from '../members/members.repository.js';
-import { plansRepository } from '../plans/plans.repository.js';
+import { membersService } from '../members/index.js';
+import { plansService } from '../plans/index.js';
 
 interface PaginatedMemberships {
   data: Membership[];
@@ -50,20 +50,13 @@ export const membershipsService = {
   },
 
   async create(input: CreateMembershipInput): Promise<Membership> {
-    const member = await membersRepository.findById(input.memberId);
-    if (!member) {
-      throw new HttpError(ErrorCode.MEMBER_NOT_FOUND, 'Member not found', 404);
-    }
-    if (member.isDeleted) {
-      throw new HttpError(ErrorCode.MEMBER_DELETED, 'Member has been deleted', 403);
-    }
+    // Validates existence and soft-delete status
+    await membersService.getById(input.memberId);
 
-    const plan = await plansRepository.findById(input.planId);
-    if (!plan) {
-      throw new HttpError(ErrorCode.PLAN_NOT_FOUND, 'Plan not found', 404);
-    }
+    // Validates existence
+    const plan = await plansService.getById(input.planId);
     if (!plan.isActive) {
-      throw new HttpError(ErrorCode.PLAN_INACTIVE, 'Plan is not active', 403);
+      throw new HttpError(ErrorCode.PLAN_INACTIVE, 'Plan is not active', 422);
     }
 
     const activeMembership = await membershipsRepository.findActiveByMemberId(input.memberId);
@@ -87,8 +80,11 @@ export const membershipsService = {
     if (!membership) {
       throw new HttpError(ErrorCode.MEMBERSHIP_NOT_FOUND, 'Membership not found', 404);
     }
-    if (membership.status === 'cancelled') {
-      throw new HttpError(ErrorCode.MEMBERSHIP_ALREADY_CANCELLED, 'Membership is already cancelled', 409);
+    if (membership.status !== 'active') {
+      const code = membership.status === 'cancelled'
+        ? ErrorCode.MEMBERSHIP_ALREADY_CANCELLED
+        : ErrorCode.MEMBERSHIP_EXPIRED;
+      throw new HttpError(code, `Membership is ${membership.status}`, 409);
     }
 
     const cancelledAt = input.cancelledAt ?? formatDateString(new Date());
