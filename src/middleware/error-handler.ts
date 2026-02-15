@@ -1,26 +1,11 @@
 import type { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+import { HttpError } from '../types/http-error.js';
 import { ErrorCode } from '../types/error.types.js';
 import { env } from '../config/env.js';
 
-interface HttpError {
-  code: ErrorCode;
-  message: string;
-  statusCode: number;
-}
-
-const isHttpError = (err: unknown): err is HttpError => {
-  if (typeof err !== 'object' || err === null) return false;
-  const e = err as Record<string, unknown>;
-  return (
-    typeof e.code === 'string' &&
-    typeof e.message === 'string' &&
-    typeof e.statusCode === 'number'
-  );
-};
-
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next): void => {
-  if (isHttpError(err)) {
+  if (err instanceof HttpError) {
     res.status(err.statusCode).json({
       success: false,
       error: { code: err.code, message: err.message },

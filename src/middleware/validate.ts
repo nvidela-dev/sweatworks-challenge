@@ -1,21 +1,13 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
-import type { ZodSchema } from 'zod';
+import type { ZodType } from 'zod';
+import '../types/express.js';
 
 type ValidationSource = 'body' | 'query' | 'params';
 
-declare global {
-  namespace Express {
-    interface Request {
-      validated?: {
-        body?: unknown;
-        query?: unknown;
-        params?: unknown;
-      };
-    }
-  }
-}
-
-export const validate = (schema: ZodSchema, source: ValidationSource): RequestHandler =>
+export const validate = <T extends ZodType>(
+  schema: T,
+  source: ValidationSource
+): RequestHandler =>
   (req: Request, _res: Response, next: NextFunction): void => {
     const result = schema.safeParse(req[source]);
 
@@ -24,7 +16,9 @@ export const validate = (schema: ZodSchema, source: ValidationSource): RequestHa
       return;
     }
 
-    req.validated = req.validated || {};
-    req.validated[source] = result.data;
+    if (source === 'body') req.validatedBody = result.data;
+    if (source === 'query') req.validatedQuery = result.data;
+    if (source === 'params') req.validatedParams = result.data;
+
     next();
   };
