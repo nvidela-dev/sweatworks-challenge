@@ -1,6 +1,8 @@
+import { eq } from 'drizzle-orm';
 import { db, pool } from './client.js';
 import { plans } from './schema/plans.js';
 import { members } from './schema/members.js';
+import { memberships } from './schema/memberships.js';
 
 const seedPlans = [
   {
@@ -88,6 +90,40 @@ async function seed() {
 
   await db.insert(members).values(seedMembers).onConflictDoNothing();
   console.log(`Inserted ${seedMembers.length} members`);
+
+  // Fetch inserted members and plans for memberships
+  const [john] = await db.select().from(members).where(eq(members.email, 'john.doe@example.com'));
+  const [jane] = await db.select().from(members).where(eq(members.email, 'jane.smith@example.com'));
+  const [basicPlan] = await db.select().from(plans).where(eq(plans.name, 'Basic Monthly'));
+  const [premiumPlan] = await db.select().from(plans).where(eq(plans.name, 'Premium Monthly'));
+
+  if (john && jane && basicPlan && premiumPlan) {
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysFromNow = new Date(today);
+    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+
+    const seedMemberships = [
+      {
+        memberId: john.id,
+        planId: basicPlan.id,
+        startDate: today.toISOString().slice(0, 10),
+        endDate: thirtyDaysFromNow.toISOString().slice(0, 10),
+        status: 'active',
+      },
+      {
+        memberId: jane.id,
+        planId: premiumPlan.id,
+        startDate: thirtyDaysAgo.toISOString().slice(0, 10),
+        endDate: today.toISOString().slice(0, 10),
+        status: 'expired',
+      },
+    ];
+
+    await db.insert(memberships).values(seedMemberships).onConflictDoNothing();
+    console.log(`Inserted ${seedMemberships.length} memberships`);
+  }
 
   console.log('Seeding completed');
   await pool.end();

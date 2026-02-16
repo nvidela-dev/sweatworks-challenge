@@ -5,6 +5,7 @@ import {
   phoneSchema,
   paginationSchema,
   sortOrderSchema,
+  queryBooleanSchema,
 } from './common.schema.js';
 
 export const createMemberSchema = z.object({
@@ -35,7 +36,7 @@ export const memberQuerySchema = paginationSchema.extend({
     .enum(['firstName', 'lastName', 'email', 'createdAt'])
     .default('createdAt'),
   sortOrder: sortOrderSchema,
-  includeDeleted: z.coerce.boolean().default(false),
+  includeDeleted: queryBooleanSchema.optional().default(false),
 });
 
 export const memberIdParamSchema = z.object({
