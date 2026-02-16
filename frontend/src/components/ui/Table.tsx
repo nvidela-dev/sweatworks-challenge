@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import styles from './Table.module.css';
 
 interface Column<T> {
   key: string;
@@ -23,21 +22,24 @@ export function Table<T>({
   emptyMessage = 'No data available',
 }: TableProps<T>) {
   return (
-    <div className={styles.container}>
-      <table className={styles.table}>
-        <thead>
+    <div className="overflow-x-auto rounded-lg border border-gray-200">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
           <tr>
             {columns.map((col) => (
-              <th key={col.key} className={styles.th}>
+              <th
+                key={col.key}
+                className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+              >
                 {col.header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white divide-y divide-gray-200">
           {data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className={styles.empty}>
+              <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-500">
                 {emptyMessage}
               </td>
             </tr>
@@ -45,11 +47,13 @@ export function Table<T>({
             data.map((item) => (
               <tr
                 key={keyExtractor(item)}
-                className={`${styles.tr} ${onRowClick ? styles.clickable : ''}`}
+                className={`
+                  ${onRowClick ? 'cursor-pointer hover:bg-gray-50' : ''}
+                `}
                 onClick={() => onRowClick?.(item)}
               >
                 {columns.map((col) => (
-                  <td key={col.key} className={styles.td}>
+                  <td key={col.key} className="px-4 py-3 text-sm text-gray-700">
                     {col.render
                       ? col.render(item)
                       : String((item as Record<string, unknown>)[col.key] ?? '')}

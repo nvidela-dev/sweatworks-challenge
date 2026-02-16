@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import styles from './Modal.module.css';
 
 interface ModalProps {
   isOpen: boolean;
@@ -31,15 +30,27 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
-        <div className={styles.header}>
-          <h2 className={styles.title}>{title}</h2>
-          <button className={styles.closeButton} onClick={onClose} aria-label="Close">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+          <button
+            className="text-2xl text-gray-400 hover:text-gray-600 leading-none"
+            onClick={onClose}
+            aria-label="Close"
+          >
             ×
           </button>
         </div>
-        <div className={styles.content}>{children}</div>
+        <div className="p-6">{children}</div>
       </div>
     </div>
   );
