@@ -7,6 +7,8 @@ import {
   mockSelect,
   mockInsert,
   mockSelectMultiple,
+  getSelectCalls,
+  getInsertCalls,
 } from './helpers/db.mock.js';
 import {
   createMember,
@@ -44,6 +46,10 @@ describe('Members API', () => {
         hasNext: false,
         hasPrev: false,
       });
+
+      // Verify DB queries: data + count
+      const selectCalls = getSelectCalls();
+      expect(selectCalls).toHaveLength(2);
     });
 
     it('supports search by name or email', async () => {
@@ -172,6 +178,10 @@ describe('Members API', () => {
       expect(response.body.data.firstName).toBe('New');
       expect(response.body.data.lastName).toBe('Member');
       expect(response.body.data.email).toBe('new.member@example.com');
+
+      // Verify DB operations: email check + insert
+      expect(getSelectCalls()).toHaveLength(1);
+      expect(getInsertCalls()).toHaveLength(1);
     });
 
     it('creates a member with optional phone', async () => {

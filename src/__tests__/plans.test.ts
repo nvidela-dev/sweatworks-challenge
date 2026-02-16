@@ -5,6 +5,7 @@ import {
   resetMockDb,
   mockPaginated,
   mockSelect,
+  getSelectCalls,
 } from './helpers/db.mock.js';
 import { createPlan, resetUUIDCounter } from './helpers/fixtures.js';
 
@@ -34,6 +35,10 @@ describe('Plans API', () => {
         hasNext: false,
         hasPrev: false,
       });
+
+      // Verify DB queries
+      const selectCalls = getSelectCalls();
+      expect(selectCalls).toHaveLength(2); // data + count
     });
 
     it('returns only active plans when filtered', async () => {
@@ -83,6 +88,10 @@ describe('Plans API', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.data.id).toBe('123e4567-e89b-12d3-a456-426614174000');
       expect(response.body.data.name).toBe('Basic');
+
+      // Verify single select query was made
+      const selectCalls = getSelectCalls();
+      expect(selectCalls).toHaveLength(1);
     });
 
     it('returns 404 for nonexistent plan', async () => {

@@ -11,9 +11,4 @@ export default defineConfig({
     },
     setupFiles: ['src/__tests__/helpers/setup.ts'],
   },
-  resolve: {
-    alias: {
-      // Handle .js extensions in imports for ESM compatibility
-    },
-  },
 });

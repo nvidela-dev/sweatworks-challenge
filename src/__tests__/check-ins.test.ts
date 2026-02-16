@@ -7,6 +7,8 @@ import {
   mockSelect,
   mockInsert,
   mockSelectMultiple,
+  getSelectCalls,
+  getInsertCalls,
 } from './helpers/db.mock.js';
 import {
   createMember,
@@ -156,6 +158,10 @@ describe('Check-ins API', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.data.memberId).toBe(memberId);
       expect(response.body.data.membershipId).toBe(membershipId);
+
+      // Verify DB operations: member check + membership check + insert
+      expect(getSelectCalls()).toHaveLength(2);
+      expect(getInsertCalls()).toHaveLength(1);
     });
 
     it('creates a check-in with custom timestamp', async () => {

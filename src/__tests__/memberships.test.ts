@@ -8,6 +8,9 @@ import {
   mockInsert,
   mockUpdate,
   mockSelectMultiple,
+  getSelectCalls,
+  getInsertCalls,
+  getUpdateCalls,
 } from './helpers/db.mock.js';
 import {
   createMember,
@@ -151,6 +154,10 @@ describe('Memberships API', () => {
       expect(response.body.data.memberId).toBe(validMemberId);
       expect(response.body.data.planId).toBe(validPlanId);
       expect(response.body.data.status).toBe('active');
+
+      // Verify DB operations: member check + plan check + active membership check + insert
+      expect(getSelectCalls()).toHaveLength(3);
+      expect(getInsertCalls()).toHaveLength(1);
     });
 
     it('auto-calculates endDate from plan durationDays when not provided', async () => {
@@ -290,6 +297,10 @@ describe('Memberships API', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.data.status).toBe('cancelled');
       expect(response.body.data.cancelledAt).toBe('2024-01-15');
+
+      // Verify DB operations: fetch + update
+      expect(getSelectCalls()).toHaveLength(1);
+      expect(getUpdateCalls()).toHaveLength(1);
     });
 
     it('defaults cancelledAt to today if not provided', async () => {
