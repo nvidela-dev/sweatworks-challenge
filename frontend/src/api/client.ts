@@ -1,17 +1,17 @@
-import type { ApiResponse, ApiErrorData } from '@/types';
+import type { ApiErrorData, ApiResponse, PaginationMeta } from '@/types';
 
 const API_BASE = '/api';
 
 export class ApiError extends Error {
   code: string;
   statusCode: number;
-  details?: Array<{ field: string; message: string; code: string }>;
+  details?: { field: string; message: string; code: string }[];
 
   constructor(
     code: string,
     message: string,
     statusCode: number,
-    details?: Array<{ field: string; message: string; code: string }>
+    details?: { field: string; message: string; code: string }[]
   ) {
     super(message);
     this.name = 'ApiError';
@@ -86,7 +86,7 @@ export async function patch<T>(endpoint: string, body: unknown): Promise<T> {
 export async function getPaginated<T>(
   endpoint: string,
   params: object = {}
-): Promise<{ data: T[]; meta: import('@/types').PaginationMeta }> {
+): Promise<{ data: T[]; meta: PaginationMeta }> {
   const url = `${API_BASE}${endpoint}${buildQueryString(params)}`;
   const response = await fetch(url, {
     method: 'GET',

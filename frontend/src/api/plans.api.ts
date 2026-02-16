@@ -1,5 +1,5 @@
-import { get, getPaginated } from './client';
 import type { Plan, PlansListParams, PaginationMeta } from '@/types';
+import { get, getPaginated } from './client';
 
 export async function getPlans(
   params: PlansListParams = {}

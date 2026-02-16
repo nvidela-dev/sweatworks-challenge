@@ -1,4 +1,3 @@
-import { get, post, getPaginated } from './client';
 import type {
   Member,
   MemberProfile,
@@ -6,6 +5,7 @@ import type {
   MembersListParams,
   PaginationMeta,
 } from '@/types';
+import { get, post, getPaginated } from './client';
 
 export async function getMembers(
   params: MembersListParams = {}

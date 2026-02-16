@@ -1,5 +1,5 @@
-import { get, post, getPaginated } from './client';
 import type { CheckIn, CreateCheckInInput, CheckInsListParams, PaginationMeta } from '@/types';
+import { get, post, getPaginated } from './client';
 
 export async function getCheckIns(
   params: CheckInsListParams = {}
