@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { AppLayout, PageHeader } from '@/components/layout';
 import { Alert, Button, LoadingSpinner, Pagination } from '@/components/ui';
 import { CreateMemberModal } from './CreateMemberModal';
@@ -17,10 +17,11 @@ export function MembersPage() {
     search: search || undefined,
   });
 
-  const handleSearch = (query: string) => {
+  // useCallback here completes the memo chain with MemberSearch
+  const handleSearch = useCallback((query: string) => {
     setSearch(query);
     setPage(1);
-  };
+  }, []);
 
   const handleCreateSuccess = () => {
     setIsCreateModalOpen(false);

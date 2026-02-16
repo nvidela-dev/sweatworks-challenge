@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { Button, Input } from '@/components/ui';
 
 interface MemberSearchProps {
@@ -7,7 +7,8 @@ interface MemberSearchProps {
   debounceMs?: number;
 }
 
-export function MemberSearch({
+// memo here completes the chain with useCallback(handleSearch) in MembersPage
+export const MemberSearch = memo(function MemberSearch({
   onSearch,
   initialValue = '',
   debounceMs = 300,
@@ -60,4 +61,4 @@ export function MemberSearch({
       </Button>
     </form>
   );
-}
+});
