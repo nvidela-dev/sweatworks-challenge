@@ -3,6 +3,7 @@ import {
   uuidSchema,
   paginationSchema,
   sortOrderSchema,
+  queryBooleanSchema,
 } from './common.schema.js';
 
 export const createPlanSchema = z.object({
@@ -38,7 +39,7 @@ export const updatePlanSchema = z.object({
 
 export const planQuerySchema = paginationSchema.extend({
   search: z.string().max(100).optional(),
-  isActive: z.coerce.boolean().optional(),
+  isActive: queryBooleanSchema.optional(),
   sortBy: z
     .enum(['name', 'priceCents', 'durationDays', 'createdAt'])
     .default('createdAt'),

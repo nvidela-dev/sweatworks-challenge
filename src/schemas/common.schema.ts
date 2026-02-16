@@ -28,5 +28,9 @@ export const paginationSchema = z.object({
 
 export const sortOrderSchema = z.enum(['asc', 'desc']).default('desc');
 
+export const queryBooleanSchema = z
+  .union([z.boolean(), z.enum(['true', 'false'])])
+  .transform((v) => v === true || v === 'true');
+
 export type Pagination = z.infer<typeof paginationSchema>;
 export type SortOrder = z.infer<typeof sortOrderSchema>;
