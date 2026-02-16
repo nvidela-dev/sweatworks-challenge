@@ -1,11 +1,20 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppLayout, PageHeader } from '@/components/layout';
-import { Alert, Badge, LoadingSpinner } from '@/components/ui';
+import { Alert, Button, LoadingSpinner } from '@/components/ui';
+import {
+  AssignMembershipModal,
+  CancelMembershipModal,
+  MembershipBadge,
+} from '@/features/memberships';
 import { useMemberProfile } from './useMemberProfile';
 
 export function MemberProfilePage() {
   const { id } = useParams<{ id: string }>();
-  const { profile, loading, error } = useMemberProfile(id || '');
+  const { profile, loading, error, refetch } = useMemberProfile(id || '');
+
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   if (loading) {
     return (
@@ -26,11 +35,12 @@ export function MemberProfilePage() {
   }
 
   const { member, activeMembership, lastCheckIn, checkInsLast30Days } = profile;
+  const memberName = `${member.firstName} ${member.lastName}`;
 
   return (
     <AppLayout>
       <PageHeader
-        title={`${member.firstName} ${member.lastName}`}
+        title={memberName}
         subtitle={member.email}
       />
 
@@ -58,7 +68,25 @@ export function MemberProfilePage() {
 
         {/* Membership Card */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Membership</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Membership</h2>
+            {activeMembership ? (
+              <Button
+                size="sm"
+                variant="danger"
+                onClick={() => setShowCancelModal(true)}
+              >
+                Cancel
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                onClick={() => setShowAssignModal(true)}
+              >
+                Assign Plan
+              </Button>
+            )}
+          </div>
           {activeMembership ? (
             <dl className="space-y-3">
               <div>
@@ -68,7 +96,7 @@ export function MemberProfilePage() {
               <div>
                 <dt className="text-sm text-gray-500">Status</dt>
                 <dd>
-                  <Badge variant="success">{activeMembership.status}</Badge>
+                  <MembershipBadge status={activeMembership.status} />
                 </dd>
               </div>
               <div>
@@ -112,6 +140,27 @@ export function MemberProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Assign Membership Modal */}
+      <AssignMembershipModal
+        isOpen={showAssignModal}
+        onClose={() => setShowAssignModal(false)}
+        onSuccess={refetch}
+        memberId={member.id}
+        memberName={memberName}
+      />
+
+      {/* Cancel Membership Modal */}
+      {activeMembership && (
+        <CancelMembershipModal
+          isOpen={showCancelModal}
+          onClose={() => setShowCancelModal(false)}
+          onSuccess={refetch}
+          membershipId={activeMembership.id}
+          memberName={memberName}
+          planName={activeMembership.plan.name}
+        />
+      )}
     </AppLayout>
   );
 }
