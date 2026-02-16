@@ -1,5 +1,5 @@
 services:
-  postgres:
+  db:
     image: postgres:16-alpine
     container_name: sweatworks-db
     environment:
@@ -15,6 +15,43 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  api:
+    build:
+      context: ./backend
+      target: development
+    container_name: sweatworks-api
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/sweatworks
+    volumes:
+      - ./backend/src:/app/src:ro
+      - ./backend/package.json:/app/package.json:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Production-like API service (optional)
+  api-prod:
+    build:
+      context: ./backend
+      target: production
+    container_name: sweatworks-api-prod
+    ports:
+      - '3001:3000'
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/sweatworks
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles:
+      - prod
 
 volumes:
   postgres_data:

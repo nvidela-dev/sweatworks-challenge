@@ -1,16 +1,16 @@
 # Dependencies
-node_modules/
+node_modules
 
 # Build output
-dist/
+dist
 
-# Environment files
+# Environment
 .env
 .env.local
 
 # IDE
-.idea/
-.vscode/
+.idea
+.vscode
 *.swp
 *.swo
 
@@ -22,8 +22,9 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Testing
-coverage/
+# Test coverage
+coverage
 
-# Claude workspace
+# Drizzle
+drizzle/*.sql
 .claude/
