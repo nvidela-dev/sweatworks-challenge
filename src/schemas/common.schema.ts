@@ -34,3 +34,30 @@ export const queryBooleanSchema = z
 
 export type Pagination = z.infer<typeof paginationSchema>;
 export type SortOrder = z.infer<typeof sortOrderSchema>;
+
+/**
+ * Creates a Zod refinement for validating date range fields.
+ * Ensures fromKey <= toKey when both are present.
+ */
+export function dateRangeRefinement<T extends Record<string, unknown>>(
+  fromKey: keyof T & string,
+  toKey: keyof T & string
+): {
+  refinement: (data: T) => boolean;
+  params: { message: string; path: string[] };
+} {
+  return {
+    refinement: (data: T) => {
+      const from = data[fromKey];
+      const to = data[toKey];
+      if (from && to) {
+        return from <= to;
+      }
+      return true;
+    },
+    params: {
+      message: `${fromKey} must be before or equal to ${toKey}`,
+      path: [fromKey],
+    },
+  };
+}

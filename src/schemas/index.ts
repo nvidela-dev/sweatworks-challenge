@@ -6,6 +6,7 @@ export {
   phoneSchema,
   paginationSchema,
   sortOrderSchema,
+  dateRangeRefinement,
 } from './common.schema.js';
 export type { Pagination, SortOrder } from './common.schema.js';
 
@@ -54,13 +55,13 @@ export type {
 } from './membership.schema.js';
 
 export {
-  createCheckInSchema,
+  createCheckInBodySchema,
   checkInQuerySchema,
   checkInIdParamSchema,
   memberCheckInParamsSchema,
 } from './check-in.schema.js';
 export type {
-  CreateCheckInInput,
+  CreateCheckInBody,
   CheckInQuery,
   CheckInIdParam,
   MemberCheckInParams,

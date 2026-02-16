@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import {
   checkInQuerySchema,
   checkInIdParamSchema,
-  createCheckInSchema,
+  createCheckInBodySchema,
 } from '../schemas/check-in.schema.js';
 import { memberIdParamSchema } from '../schemas/member.schema.js';
 import { checkInsService } from './check-ins.service.js';
@@ -30,7 +30,7 @@ export const checkInsController = {
 
   create: (req: Request, res: Response, next: NextFunction): void => {
     const params = memberIdParamSchema.parse(req.validatedParams);
-    const body = createCheckInSchema.parse(req.validatedBody);
+    const body = createCheckInBodySchema.parse(req.validatedBody);
     checkInsService
       .create(params.memberId, body.checkedInAt)
       .then((checkIn) => {

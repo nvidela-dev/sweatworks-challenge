@@ -1,21 +1,13 @@
 import type { Membership } from '../db/schema/memberships.js';
 import type { Plan } from '../db/schema/plans.js';
 import type { MembershipQuery, CreateMembershipInput, CancelMembershipInput } from '../schemas/membership.schema.js';
-import type { PaginationMeta } from '../types/api.types.js';
+import { type Paginated, paginate } from '../types/api.types.js';
 import { HttpError } from '../types/http-error.js';
 import { ErrorCode } from '../types/error.types.js';
 import { membershipsRepository } from './memberships.repository.js';
 import { membersService } from '../members/index.js';
 import { plansService } from '../plans/index.js';
-
-interface PaginatedMemberships {
-  data: Membership[];
-  meta: PaginationMeta;
-}
-
-function formatDateString(date: Date): string {
-  return date.toISOString().slice(0, 10);
-}
+import { formatDateString } from '../utils/index.js';
 
 function calculateEndDate(startDate: string, plan: Plan): string {
   const start = new Date(startDate);
@@ -24,21 +16,9 @@ function calculateEndDate(startDate: string, plan: Plan): string {
 }
 
 export const membershipsService = {
-  async list(query: MembershipQuery): Promise<PaginatedMemberships> {
+  async list(query: MembershipQuery): Promise<Paginated<Membership>> {
     const { data, total } = await membershipsRepository.findAll(query);
-    const totalPages = Math.ceil(total / query.pageSize);
-
-    return {
-      data,
-      meta: {
-        page: query.page,
-        pageSize: query.pageSize,
-        totalCount: total,
-        totalPages,
-        hasNext: query.page < totalPages,
-        hasPrev: query.page > 1,
-      },
-    };
+    return paginate(data, total, query.page, query.pageSize);
   },
 
   async getById(id: string): Promise<Membership> {

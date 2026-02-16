@@ -1,31 +1,14 @@
 import type { Member } from '../db/schema/members.js';
 import type { MemberQuery, CreateMemberInput } from '../schemas/member.schema.js';
-import type { PaginationMeta } from '../types/api.types.js';
+import { type Paginated, paginate } from '../types/api.types.js';
 import { HttpError } from '../types/http-error.js';
 import { ErrorCode } from '../types/error.types.js';
 import { membersRepository, type MemberProfile } from './members.repository.js';
 
-interface PaginatedMembers {
-  data: Member[];
-  meta: PaginationMeta;
-}
-
 export const membersService = {
-  async list(query: MemberQuery): Promise<PaginatedMembers> {
+  async list(query: MemberQuery): Promise<Paginated<Member>> {
     const { data, total } = await membersRepository.findAll(query);
-    const totalPages = Math.ceil(total / query.pageSize);
-
-    return {
-      data,
-      meta: {
-        page: query.page,
-        pageSize: query.pageSize,
-        totalCount: total,
-        totalPages,
-        hasNext: query.page < totalPages,
-        hasPrev: query.page > 1,
-      },
-    };
+    return paginate(data, total, query.page, query.pageSize);
   },
 
   async getById(id: string): Promise<Member> {
