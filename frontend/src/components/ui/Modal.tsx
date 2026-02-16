@@ -11,14 +11,22 @@ interface ModalProps {
 
 export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', handleEscape);
     }
 
     return () => {
       document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleEscape);
     };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   if (!isOpen) {
     return null;
@@ -27,9 +35,8 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   return (
     <FocusTrap
       focusTrapOptions={{
-        escapeDeactivates: true,
-        onDeactivate: onClose,
-        clickOutsideDeactivates: true,
+        escapeDeactivates: false,
+        allowOutsideClick: true,
       }}
     >
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}

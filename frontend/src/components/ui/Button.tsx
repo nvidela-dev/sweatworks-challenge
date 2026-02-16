@@ -1,8 +1,10 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger';
   size?: 'sm' | 'md' | 'lg';
+  isLoading?: boolean;
   children: ReactNode;
 }
 
@@ -18,10 +20,13 @@ const sizeClasses = {
   lg: 'px-6 py-3 text-lg',
 };
 
+
 export function Button({
   variant = 'primary',
   size = 'md',
+  isLoading = false,
   className = '',
+  disabled,
   children,
   ...props
 }: ButtonProps) {
@@ -35,8 +40,15 @@ export function Button({
   ].join(' ');
 
   return (
-    <button className={classes} {...props}>
-      {children}
+    <button className={classes} disabled={disabled || isLoading} {...props}>
+      {isLoading ? (
+        <span className="flex items-center gap-2">
+          <LoadingSpinner size="sm" />
+          {children}
+        </span>
+      ) : (
+        children
+      )}
     </button>
   );
 }
