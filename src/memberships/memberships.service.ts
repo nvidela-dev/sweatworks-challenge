@@ -91,4 +91,8 @@ export const membershipsService = {
 
     return membershipsRepository.cancel(id, cancelledAt);
   },
+
+  async getActiveByMemberId(memberId: string): Promise<Membership | undefined> {
+    return membershipsRepository.findActiveByMemberId(memberId);
+  },
 };
