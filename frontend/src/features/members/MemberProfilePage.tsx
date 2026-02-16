@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppLayout, PageHeader } from '@/components/layout';
 import { Alert, Button, LoadingSpinner } from '@/components/ui';
+import { CheckInButton } from '@/features/check-ins';
 import {
   AssignMembershipModal,
   CancelMembershipModal,
@@ -119,10 +120,10 @@ export function MemberProfilePage() {
           )}
         </div>
 
-        {/* Stats Card */}
+        {/* Activity Card */}
         <div className="bg-white rounded-lg border border-gray-200 p-6 md:col-span-2">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Activity</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center p-4 bg-gray-50 rounded-lg">
               <div className="text-2xl font-bold text-gray-900">
                 {checkInsLast30Days}
@@ -136,6 +137,15 @@ export function MemberProfilePage() {
                   : 'Never'}
               </div>
               <div className="text-sm text-gray-500">Last Check-in</div>
+            </div>
+            <div className="flex items-center justify-center p-4">
+              {activeMembership ? (
+                <CheckInButton memberId={member.id} onSuccess={refetch} />
+              ) : (
+                <p className="text-sm text-gray-500 text-center">
+                  Assign a membership to enable check-ins
+                </p>
+              )}
             </div>
           </div>
         </div>
