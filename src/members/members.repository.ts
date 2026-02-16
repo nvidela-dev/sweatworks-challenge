@@ -1,28 +1,22 @@
 import { and, eq, ilike, or, asc, desc, sql } from 'drizzle-orm';
-import type { SQL } from 'drizzle-orm';
 import { db } from '../db/client.js';
 import { members, type Member, type NewMember } from '../db/schema/members.js';
 import type { MemberQuery } from '../schemas/member.schema.js';
+import { buildConditions } from '../utils/index.js';
 
 export const membersRepository = {
   async findAll(query: MemberQuery): Promise<{ data: Member[]; total: number }> {
     const { page, pageSize, search, sortBy, sortOrder, includeDeleted } = query;
     const offset = (page - 1) * pageSize;
 
-    const conditions: SQL[] = [];
-
-    if (!includeDeleted) {
-      conditions.push(eq(members.isDeleted, false));
-    }
-
-    if (search) {
-      const searchCondition = or(
+    const conditions = buildConditions([
+      [!includeDeleted, () => eq(members.isDeleted, false)],
+      [search, () => or(
         ilike(members.firstName, `%${search}%`),
         ilike(members.lastName, `%${search}%`),
         ilike(members.email, `%${search}%`)
-      );
-      if (searchCondition) conditions.push(searchCondition);
-    }
+      )],
+    ]);
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 

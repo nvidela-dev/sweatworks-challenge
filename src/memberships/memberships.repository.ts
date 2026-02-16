@@ -1,35 +1,21 @@
 import { and, eq, gte, lte, asc, desc, sql } from 'drizzle-orm';
-import type { SQL } from 'drizzle-orm';
 import { db } from '../db/client.js';
 import { memberships, type Membership, type NewMembership } from '../db/schema/memberships.js';
 import type { MembershipQuery } from '../schemas/membership.schema.js';
+import { buildConditions } from '../utils/index.js';
 
 export const membershipsRepository = {
   async findAll(query: MembershipQuery): Promise<{ data: Membership[]; total: number }> {
     const { page, pageSize, memberId, planId, status, startDateFrom, startDateTo, sortBy, sortOrder } = query;
     const offset = (page - 1) * pageSize;
 
-    const conditions: SQL[] = [];
-
-    if (memberId) {
-      conditions.push(eq(memberships.memberId, memberId));
-    }
-
-    if (planId) {
-      conditions.push(eq(memberships.planId, planId));
-    }
-
-    if (status) {
-      conditions.push(eq(memberships.status, status));
-    }
-
-    if (startDateFrom) {
-      conditions.push(gte(memberships.startDate, startDateFrom));
-    }
-
-    if (startDateTo) {
-      conditions.push(lte(memberships.startDate, startDateTo));
-    }
+    const conditions = buildConditions([
+      [memberId, () => eq(memberships.memberId, memberId!)],
+      [planId, () => eq(memberships.planId, planId!)],
+      [status, () => eq(memberships.status, status!)],
+      [startDateFrom, () => gte(memberships.startDate, startDateFrom!)],
+      [startDateTo, () => lte(memberships.startDate, startDateTo!)],
+    ]);
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
