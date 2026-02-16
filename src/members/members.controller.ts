@@ -20,9 +20,9 @@ export const membersController = {
   getById: (req: Request, res: Response, next: NextFunction): void => {
     const params = memberIdParamSchema.parse(req.validatedParams);
     membersService
-      .getById(params.memberId)
-      .then((member) => {
-        res.json({ success: true, data: member });
+      .getProfile(params.memberId)
+      .then((profile) => {
+        res.json({ success: true, data: profile });
       })
       .catch(next);
   },

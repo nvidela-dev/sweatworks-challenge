@@ -3,7 +3,7 @@ import type { MemberQuery, CreateMemberInput } from '../schemas/member.schema.js
 import type { PaginationMeta } from '../types/api.types.js';
 import { HttpError } from '../types/http-error.js';
 import { ErrorCode } from '../types/error.types.js';
-import { membersRepository } from './members.repository.js';
+import { membersRepository, type MemberProfile } from './members.repository.js';
 
 interface PaginatedMembers {
   data: Member[];
@@ -51,5 +51,16 @@ export const membersService = {
       email: input.email.toLowerCase(),
       phone: input.phone ?? null,
     });
+  },
+
+  async getProfile(id: string): Promise<MemberProfile> {
+    const profile = await membersRepository.findProfileById(id);
+    if (!profile) {
+      throw new HttpError(ErrorCode.MEMBER_NOT_FOUND, 'Member not found', 404);
+    }
+    if (profile.member.isDeleted) {
+      throw new HttpError(ErrorCode.MEMBER_DELETED, 'Member has been deleted', 403);
+    }
+    return profile;
   },
 };
