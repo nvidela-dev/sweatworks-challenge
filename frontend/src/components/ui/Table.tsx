@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { KeyboardEvent, ReactNode } from 'react';
 
 interface Column<T> {
   key: string;
@@ -21,6 +21,13 @@ export function Table<T>({
   onRowClick,
   emptyMessage = 'No data available',
 }: TableProps<T>) {
+  const handleRowKeyDown = (e: KeyboardEvent<HTMLTableRowElement>, item: T) => {
+    if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onRowClick(item);
+    }
+  };
+
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200">
       <table className="min-w-full divide-y divide-gray-200">
@@ -48,9 +55,12 @@ export function Table<T>({
               <tr
                 key={keyExtractor(item)}
                 className={`
-                  ${onRowClick ? 'cursor-pointer hover:bg-gray-50' : ''}
+                  ${onRowClick ? 'cursor-pointer hover:bg-gray-50 focus:bg-gray-50 focus:outline-none' : ''}
                 `}
                 onClick={() => onRowClick?.(item)}
+                onKeyDown={(e) => handleRowKeyDown(e, item)}
+                tabIndex={onRowClick ? 0 : undefined}
+                role={onRowClick ? 'button' : undefined}
               >
                 {columns.map((col) => (
                   <td key={col.key} className="px-4 py-3 text-sm text-gray-700">
