@@ -6,6 +6,8 @@ import { plans, type Plan } from '../db/schema/plans.js';
 import { checkIns } from '../db/schema/check-ins.js';
 import type { MemberQuery } from '../schemas/member.schema.js';
 import { buildConditions } from '../utils/index.js';
+import { HttpError } from '../types/http-error.js';
+import { ErrorCode } from '../types/error.types.js';
 
 export interface MembershipWithPlan {
   id: string;
@@ -76,7 +78,7 @@ export const membersRepository = {
   async create(data: NewMember): Promise<Member> {
     const [member] = await db.insert(members).values(data).returning();
     if (!member) {
-      throw new Error('Failed to create member');
+      throw new HttpError(ErrorCode.DATABASE_ERROR, 'Failed to create member', 500);
     }
     return member;
   },

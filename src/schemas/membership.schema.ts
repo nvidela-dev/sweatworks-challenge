@@ -4,6 +4,7 @@ import {
   dateStringSchema,
   paginationSchema,
   sortOrderSchema,
+  dateRangeRefinement,
 } from './common.schema.js';
 
 export const MEMBERSHIP_STATUSES = ['active', 'cancelled', 'expired'] as const;
@@ -43,7 +44,7 @@ export const cancelMembershipSchema = z.object({
   cancelledAt: notInFutureDate.optional(),
 });
 
-export const membershipQuerySchema = paginationSchema.extend({
+const membershipQueryBase = paginationSchema.extend({
   memberId: uuidSchema.optional(),
   planId: uuidSchema.optional(),
   status: membershipStatusSchema.optional(),
@@ -52,6 +53,15 @@ export const membershipQuerySchema = paginationSchema.extend({
   sortBy: z.enum(['startDate', 'endDate', 'createdAt']).default('createdAt'),
   sortOrder: sortOrderSchema,
 });
+
+const membershipDateRange = dateRangeRefinement<z.infer<typeof membershipQueryBase>>(
+  'startDateFrom',
+  'startDateTo'
+);
+export const membershipQuerySchema = membershipQueryBase.refine(
+  membershipDateRange.refinement,
+  membershipDateRange.params
+);
 
 export const membershipIdParamSchema = z.object({
   membershipId: uuidSchema,

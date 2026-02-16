@@ -3,6 +3,7 @@ import { db, pool } from './client.js';
 import { plans } from './schema/plans.js';
 import { members } from './schema/members.js';
 import { memberships } from './schema/memberships.js';
+import { formatDateString } from '../utils/index.js';
 
 const seedPlans = [
   {
@@ -108,15 +109,15 @@ async function seed() {
       {
         memberId: john.id,
         planId: basicPlan.id,
-        startDate: today.toISOString().slice(0, 10),
-        endDate: thirtyDaysFromNow.toISOString().slice(0, 10),
+        startDate: formatDateString(today),
+        endDate: formatDateString(thirtyDaysFromNow),
         status: 'active',
       },
       {
         memberId: jane.id,
         planId: premiumPlan.id,
-        startDate: thirtyDaysAgo.toISOString().slice(0, 10),
-        endDate: today.toISOString().slice(0, 10),
+        startDate: formatDateString(thirtyDaysAgo),
+        endDate: formatDateString(today),
         status: 'expired',
       },
     ];

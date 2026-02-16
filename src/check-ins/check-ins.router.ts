@@ -3,7 +3,7 @@ import { validate } from '../middleware/validate.js';
 import {
   checkInQuerySchema,
   checkInIdParamSchema,
-  createCheckInSchema,
+  createCheckInBodySchema,
 } from '../schemas/check-in.schema.js';
 import { memberIdParamSchema } from '../schemas/member.schema.js';
 import { checkInsController } from './check-ins.controller.js';
@@ -22,7 +22,7 @@ const memberCheckInsRouter = Router({ mergeParams: true });
 memberCheckInsRouter.post(
   '/',
   validate(memberIdParamSchema, 'params'),
-  validate(createCheckInSchema, 'body'),
+  validate(createCheckInBodySchema, 'body'),
   checkInsController.create
 );
 

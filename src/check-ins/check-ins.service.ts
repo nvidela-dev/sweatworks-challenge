@@ -1,33 +1,16 @@
 import type { CheckIn } from '../db/schema/check-ins.js';
 import type { CheckInQuery } from '../schemas/check-in.schema.js';
-import type { PaginationMeta } from '../types/api.types.js';
+import { type Paginated, paginate } from '../types/api.types.js';
 import { HttpError } from '../types/http-error.js';
 import { ErrorCode } from '../types/error.types.js';
 import { checkInsRepository } from './check-ins.repository.js';
 import { membersService } from '../members/index.js';
 import { membershipsService } from '../memberships/index.js';
 
-interface PaginatedCheckIns {
-  data: CheckIn[];
-  meta: PaginationMeta;
-}
-
 export const checkInsService = {
-  async list(query: CheckInQuery): Promise<PaginatedCheckIns> {
+  async list(query: CheckInQuery): Promise<Paginated<CheckIn>> {
     const { data, total } = await checkInsRepository.findAll(query);
-    const totalPages = Math.ceil(total / query.pageSize);
-
-    return {
-      data,
-      meta: {
-        page: query.page,
-        pageSize: query.pageSize,
-        totalCount: total,
-        totalPages,
-        hasNext: query.page < totalPages,
-        hasPrev: query.page > 1,
-      },
-    };
+    return paginate(data, total, query.page, query.pageSize);
   },
 
   async getById(id: string): Promise<CheckIn> {

@@ -3,6 +3,8 @@ import { db } from '../db/client.js';
 import { checkIns, type CheckIn, type NewCheckIn } from '../db/schema/check-ins.js';
 import type { CheckInQuery } from '../schemas/check-in.schema.js';
 import { buildConditions } from '../utils/index.js';
+import { HttpError } from '../types/http-error.js';
+import { ErrorCode } from '../types/error.types.js';
 
 export const checkInsRepository = {
   async findAll(query: CheckInQuery): Promise<{ data: CheckIn[]; total: number }> {
@@ -50,7 +52,7 @@ export const checkInsRepository = {
   async create(data: NewCheckIn): Promise<CheckIn> {
     const [checkIn] = await db.insert(checkIns).values(data).returning();
     if (!checkIn) {
-      throw new Error('Failed to create check-in');
+      throw new HttpError(ErrorCode.DATABASE_ERROR, 'Failed to create check-in', 500);
     }
     return checkIn;
   },

@@ -3,6 +3,8 @@ import { db } from '../db/client.js';
 import { memberships, type Membership, type NewMembership } from '../db/schema/memberships.js';
 import type { MembershipQuery } from '../schemas/membership.schema.js';
 import { buildConditions } from '../utils/index.js';
+import { HttpError } from '../types/http-error.js';
+import { ErrorCode } from '../types/error.types.js';
 
 export const membershipsRepository = {
   async findAll(query: MembershipQuery): Promise<{ data: Membership[]; total: number }> {
@@ -60,7 +62,7 @@ export const membershipsRepository = {
   async create(data: NewMembership): Promise<Membership> {
     const [membership] = await db.insert(memberships).values(data).returning();
     if (!membership) {
-      throw new Error('Failed to create membership');
+      throw new HttpError(ErrorCode.DATABASE_ERROR, 'Failed to create membership', 500);
     }
     return membership;
   },
@@ -72,7 +74,7 @@ export const membershipsRepository = {
       .where(eq(memberships.id, id))
       .returning();
     if (!membership) {
-      throw new Error('Failed to cancel membership');
+      throw new HttpError(ErrorCode.DATABASE_ERROR, 'Failed to cancel membership', 500);
     }
     return membership;
   },
