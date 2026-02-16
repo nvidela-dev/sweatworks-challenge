@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getMemberProfile } from '@/api';
 import type { MemberProfile } from '@/types';
 
@@ -13,9 +13,12 @@ export function useMemberProfile(memberId: string): UseMemberProfileResult {
   const [profile, setProfile] = useState<MemberProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  const fetchProfile = useCallback(async () => {
+  const fetchProfile = useCallback(async (signal?: AbortSignal) => {
     if (!memberId) {
+      setLoading(false);
+      setProfile(null);
       return;
     }
 
@@ -24,17 +27,38 @@ export function useMemberProfile(memberId: string): UseMemberProfileResult {
 
     try {
       const result = await getMemberProfile(memberId);
+      if (signal?.aborted) {
+        return;
+      }
       setProfile(result);
     } catch (err) {
+      if (signal?.aborted) {
+        return;
+      }
       setError(err instanceof Error ? err.message : 'Failed to fetch member profile');
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) {
+        setLoading(false);
+      }
     }
   }, [memberId]);
 
   useEffect(() => {
-    fetchProfile();
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
+
+    fetchProfile(abortControllerRef.current.signal);
+
+    return () => {
+      abortControllerRef.current?.abort();
+    };
   }, [fetchProfile]);
 
-  return { profile, loading, error, refetch: fetchProfile };
+  const refetch = useCallback(() => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
+    fetchProfile(abortControllerRef.current.signal);
+  }, [fetchProfile]);
+
+  return { profile, loading, error, refetch };
 }
