@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ApiError, get, post, getPaginated } from './client';
+import { ApiError, get, post, patch, getPaginated } from './client';
 
 describe('ApiError', () => {
   it('creates error with correct properties', () => {
@@ -128,6 +128,101 @@ describe('API client', () => {
           body: JSON.stringify(body),
         })
       );
+    });
+  });
+
+  describe('patch', () => {
+    it('makes PATCH request with JSON body', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({ success: true, data: { id: '1', status: 'cancelled' } }),
+      });
+
+      const body = { cancelledAt: '2024-01-15' };
+      await patch('/memberships/1/cancel', body);
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/memberships/1/cancel',
+        expect.objectContaining({
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(body),
+        })
+      );
+    });
+
+    it('returns response data on success', async () => {
+      const responseData = { id: '1', status: 'cancelled', cancelledAt: '2024-01-15' };
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({ success: true, data: responseData }),
+      });
+
+      const result = await patch('/memberships/1/cancel', {});
+
+      expect(result).toEqual(responseData);
+    });
+
+    it('throws ApiError on validation error', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid date',
+            details: [{ field: 'cancelledAt', message: 'Must be a valid date', code: 'invalid_date' }],
+          },
+        }),
+      });
+
+      await expect(patch('/memberships/1/cancel', {})).rejects.toMatchObject({
+        code: 'VALIDATION_ERROR',
+        message: 'Invalid date',
+      });
+    });
+  });
+
+  describe('timeout and network errors', () => {
+    it('throws TIMEOUT error when request times out', async () => {
+      const abortError = new Error('Aborted');
+      abortError.name = 'AbortError';
+      mockFetch.mockRejectedValueOnce(abortError);
+
+      await expect(get('/members')).rejects.toMatchObject({
+        code: 'TIMEOUT',
+        message: 'Request timed out',
+      });
+    });
+
+    it('throws NETWORK_ERROR when fetch fails', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network failure'));
+
+      await expect(get('/members')).rejects.toMatchObject({
+        code: 'NETWORK_ERROR',
+        message: 'Network request failed',
+      });
+    });
+
+    it('throws NETWORK_ERROR on invalid JSON response', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => {
+          throw new Error('Invalid JSON');
+        },
+      });
+
+      await expect(get('/members')).rejects.toMatchObject({
+        code: 'NETWORK_ERROR',
+        message: 'Invalid response from server',
+      });
     });
   });
 
