@@ -20,11 +20,6 @@ const sizeClasses = {
   lg: 'px-6 py-3 text-lg',
 };
 
-const spinnerSizes = {
-  sm: 'sm' as const,
-  md: 'sm' as const,
-  lg: 'md' as const,
-};
 
 export function Button({
   variant = 'primary',
@@ -48,7 +43,7 @@ export function Button({
     <button className={classes} disabled={disabled || isLoading} {...props}>
       {isLoading ? (
         <span className="flex items-center gap-2">
-          <LoadingSpinner size={spinnerSizes[size]} />
+          <LoadingSpinner size="sm" />
           {children}
         </span>
       ) : (
