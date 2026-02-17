@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useMemberProfile } from './useMemberProfile';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as api from '@/api';
+import { useMemberProfile } from './useMemberProfile';
 
 vi.mock('@/api', () => ({
   getMemberProfile: vi.fn(),
@@ -146,7 +146,7 @@ describe('useMemberProfile', () => {
   });
 
   it('returns initial state', () => {
-    vi.mocked(api.getMemberProfile).mockImplementation(() => new Promise(() => {}));
+    vi.mocked(api.getMemberProfile).mockImplementation(() => new Promise(() => { /* never resolves */ }));
 
     const { result } = renderHook(() => useMemberProfile('1'));
 
