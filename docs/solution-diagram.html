@@ -185,36 +185,37 @@
         <path d="M 108 400 L 108 434" class="arrow arrow-data" />
         <text x="118" y="422" class="arrow-label">SQL (Drizzle)</text>
 
-        <!-- Data flow detail box -->
-        <rect x="228" y="56" width="296" height="174" class="box" fill="#ffffff" stroke="#e5e7eb" />
-        <text x="244" y="78" class="box-label" font-size="12">Data Flow</text>
-
-        <text x="244" y="100" class="box-sublabel" font-size="10">1. Browser renders React SPA (lazy-loaded routes)</text>
-        <text x="244" y="116" class="box-sublabel" font-size="10">2. Custom hooks call typed API client (fetch-based)</text>
-        <text x="244" y="132" class="box-sublabel" font-size="10">3. Vite proxy (dev) or nginx (prod) → Express API</text>
-        <text x="244" y="148" class="box-sublabel" font-size="10">4. Zod validates → Controller → Service → Repository</text>
-        <text x="244" y="164" class="box-sublabel" font-size="10">5. Drizzle ORM queries PostgreSQL</text>
-        <text x="244" y="180" class="box-sublabel" font-size="10">6. Consistent JSON envelope response:</text>
-        <text x="256" y="196" class="box-sublabel" font-size="9" font-family="monospace">{ success, data, meta?, error? }</text>
-        <text x="244" y="218" class="box-sublabel" font-size="10">7. AbortController cancels in-flight on unmount</text>
-
         <!-- Key constraints box -->
-        <rect x="228" y="250" width="296" height="128" class="box" fill="#ffffff" stroke="#e5e7eb" />
-        <text x="244" y="272" class="box-label" font-size="12">Key Constraints</text>
+        <rect x="228" y="56" width="296" height="148" class="box" fill="#ffffff" stroke="#e5e7eb" />
+        <text x="244" y="78" class="box-label" font-size="12">Key Constraints</text>
 
-        <text x="244" y="294" class="box-sublabel" font-size="10">Unique email per member (DB UNIQUE)</text>
-        <text x="244" y="312" class="box-sublabel" font-size="10">One active membership (partial unique index</text>
-        <text x="256" y="326" class="box-sublabel" font-size="10">+ application SELECT...FOR UPDATE lock)</text>
-        <text x="244" y="344" class="box-sublabel" font-size="10">Check-in requires active membership (service check</text>
-        <text x="256" y="358" class="box-sublabel" font-size="10">+ DB trigger validates member/membership match)</text>
-        <text x="244" y="374" class="box-sublabel" font-size="10">Soft-delete for members (is_deleted flag)</text>
+        <text x="244" y="100" class="box-sublabel" font-size="10">Unique email per member (DB UNIQUE)</text>
+        <text x="244" y="120" class="box-sublabel" font-size="10">One active membership (partial unique index</text>
+        <text x="256" y="134" class="box-sublabel" font-size="10">+ application SELECT...FOR UPDATE lock)</text>
+        <text x="244" y="154" class="box-sublabel" font-size="10">Check-in requires active membership (service check</text>
+        <text x="256" y="168" class="box-sublabel" font-size="10">+ DB trigger validates member/membership match)</text>
+        <text x="244" y="188" class="box-sublabel" font-size="10">Soft-delete for members (is_deleted flag)</text>
 
-        <!-- Docker label -->
-        <rect x="228" y="400" width="296" height="84" class="box box-docker" />
-        <text x="244" y="422" class="box-label" font-size="12">Docker Compose Services</text>
-        <text x="244" y="442" class="box-sublabel" font-size="10">db: postgres:16-alpine (healthcheck + volume)</text>
-        <text x="244" y="458" class="box-sublabel" font-size="10">api: Node 20 Alpine (tsx watch, hot reload)</text>
-        <text x="244" y="474" class="box-sublabel" font-size="10">frontend: Node 20 Alpine (Vite HMR)</text>
+        <!-- Docker Compose box -->
+        <rect x="228" y="224" width="296" height="84" class="box box-docker" />
+        <text x="244" y="246" class="box-label" font-size="12">Docker Compose Services</text>
+        <text x="244" y="266" class="box-sublabel" font-size="10">db: postgres:16-alpine (healthcheck + volume)</text>
+        <text x="244" y="282" class="box-sublabel" font-size="10">api: Node 20 Alpine (tsx watch, hot reload)</text>
+        <text x="244" y="298" class="box-sublabel" font-size="10">frontend: Node 20 Alpine (Vite HMR)</text>
+
+        <!-- Tech stack summary box -->
+        <rect x="228" y="328" width="296" height="156" class="box" fill="#ffffff" stroke="#e5e7eb" />
+        <text x="244" y="350" class="box-label" font-size="12">Tech Stack</text>
+
+        <text x="244" y="372" class="box-sublabel" font-size="10" font-weight="600" fill="#374151">Frontend</text>
+        <text x="244" y="388" class="box-sublabel" font-size="10">React 19 · React Router 7 · Tailwind CSS 4</text>
+        <text x="244" y="404" class="box-sublabel" font-size="10">Vite 7 · Vitest + React Testing Library</text>
+
+        <text x="244" y="426" class="box-sublabel" font-size="10" font-weight="600" fill="#374151">Backend</text>
+        <text x="244" y="442" class="box-sublabel" font-size="10">Express 4 · Drizzle ORM · Zod validation</text>
+        <text x="244" y="458" class="box-sublabel" font-size="10">Swagger/OpenAPI · Vitest + Supertest</text>
+
+        <text x="244" y="478" class="box-sublabel" font-size="10" font-weight="600" fill="#374151">120+ tests across frontend and backend</text>
 
         <!-- ===== AWS SIDE ===== -->
 
