@@ -20,92 +20,37 @@
     h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; color: #1a1a2e; }
     .subtitle { font-size: 13px; color: #6b7280; margin-bottom: 32px; }
 
-    .section-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: #6b7280;
-      margin-bottom: 16px;
-      padding-bottom: 6px;
-      border-bottom: 2px solid #e5e7eb;
-    }
-
     .diagram-container {
       position: relative;
       width: 100%;
-      height: 520px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
 
     svg { width: 100%; height: 100%; }
 
-    /* Box styles */
-    .box {
-      rx: 8;
-      ry: 8;
-      stroke-width: 2;
-    }
-
+    .box { rx: 8; ry: 8; stroke-width: 2; }
     .box-frontend { fill: #eff6ff; stroke: #3b82f6; }
     .box-backend { fill: #f0fdf4; stroke: #22c55e; }
     .box-database { fill: #fefce8; stroke: #eab308; }
     .box-aws { fill: #faf5ff; stroke: #a855f7; }
-    .box-docker { fill: #f0f9ff; stroke: #0ea5e9; }
 
-    .box-label {
-      font-size: 13px;
-      font-weight: 700;
-      fill: #374151;
-    }
+    .box-label { font-size: 14px; font-weight: 700; fill: #374151; }
+    .box-sublabel { font-size: 10.5px; fill: #6b7280; }
 
-    .box-sublabel {
-      font-size: 10px;
-      fill: #6b7280;
-    }
-
-    .tech-tag {
-      font-size: 9px;
-      font-weight: 600;
-      fill: white;
-      rx: 3;
-      ry: 3;
-    }
-
+    .tech-tag { font-size: 9px; font-weight: 600; fill: white; }
     .tag-bg-blue { fill: #3b82f6; }
     .tag-bg-green { fill: #22c55e; }
     .tag-bg-yellow { fill: #ca8a04; }
     .tag-bg-purple { fill: #a855f7; }
     .tag-bg-cyan { fill: #0ea5e9; }
 
-    .arrow {
-      stroke-width: 2;
-      fill: none;
-      marker-end: url(#arrowhead);
-    }
+    .arrow { stroke-width: 2; fill: none; }
+    .arrow-data { stroke: #3b82f6; marker-end: url(#arrowhead); }
+    .arrow-deploy { stroke: #a855f7; stroke-dasharray: 6,4; marker-end: url(#arrowhead-purple); }
 
-    .arrow-data { stroke: #3b82f6; }
-    .arrow-deploy { stroke: #a855f7; stroke-dasharray: 6,4; }
+    .arrow-label { font-size: 9.5px; fill: #6b7280; font-style: italic; }
 
-    .arrow-label {
-      font-size: 9px;
-      fill: #6b7280;
-      font-style: italic;
-    }
-
-    .section-divider {
-      stroke: #e5e7eb;
-      stroke-width: 1;
-      stroke-dasharray: 4,4;
-    }
-
-    .region-label {
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
+    .region-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; }
     .region-local { fill: #0ea5e9; }
     .region-aws { fill: #a855f7; }
 
@@ -121,7 +66,7 @@
     <p class="subtitle">Local development architecture (Docker Compose) and AWS target deployment</p>
 
     <div class="diagram-container">
-      <svg viewBox="0 0 1024 500" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 920 480" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
             <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6" />
@@ -131,146 +76,128 @@
           </marker>
         </defs>
 
-        <!-- Region backgrounds -->
-        <rect x="8" y="28" width="530" height="460" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="6,3" />
-        <rect x="554" y="28" width="462" height="460" rx="12" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1" stroke-dasharray="6,3" />
+        <!-- ===== Region backgrounds ===== -->
+        <rect x="8" y="28" width="240" height="440" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="6,3" />
+        <rect x="540" y="28" width="372" height="440" rx="12" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1" stroke-dasharray="6,3" />
 
         <!-- Region labels -->
-        <text x="24" y="20" class="region-label region-local">LOCAL DEVELOPMENT (Docker Compose)</text>
-        <text x="570" y="20" class="region-label region-aws">AWS TARGET DEPLOYMENT</text>
+        <text x="24" y="20" class="region-label region-local">LOCAL (Docker Compose)</text>
+        <text x="556" y="20" class="region-label region-aws">AWS TARGET DEPLOYMENT</text>
 
         <!-- ===== LOCAL SIDE ===== -->
 
         <!-- Browser -->
-        <rect x="28" y="56" width="160" height="72" class="box box-frontend" />
-        <text x="108" y="82" text-anchor="middle" class="box-label">Browser</text>
-        <text x="108" y="98" text-anchor="middle" class="box-sublabel">User Interface</text>
-        <rect x="58" y="108" width="100" height="16" rx="3" class="tag-bg-blue" />
-        <text x="108" y="119" text-anchor="middle" class="tech-tag" fill="white">localhost:5173</text>
-
-        <!-- Frontend Container -->
-        <rect x="28" y="160" width="160" height="100" class="box box-frontend" />
-        <text x="108" y="188" text-anchor="middle" class="box-label">Frontend</text>
-        <text x="108" y="204" text-anchor="middle" class="box-sublabel">React 19 + TypeScript</text>
-        <text x="108" y="218" text-anchor="middle" class="box-sublabel">Vite 7 + Tailwind CSS 4</text>
-        <rect x="40" y="228" width="52" height="16" rx="3" class="tag-bg-cyan" />
-        <text x="66" y="239" text-anchor="middle" class="tech-tag" fill="white">Dev: Vite</text>
-        <rect x="98" y="228" width="80" height="16" rx="3" class="tag-bg-cyan" />
-        <text x="138" y="239" text-anchor="middle" class="tech-tag" fill="white">Prod: nginx</text>
+        <rect x="28" y="48" width="200" height="68" class="box box-frontend" />
+        <text x="128" y="72" text-anchor="middle" class="box-label">Browser</text>
+        <text x="128" y="88" text-anchor="middle" class="box-sublabel">User Interface</text>
+        <rect x="64" y="98" width="128" height="14" rx="3" class="tag-bg-blue" />
+        <text x="128" y="108" text-anchor="middle" class="tech-tag" fill="white">http://localhost:5173</text>
 
         <!-- Arrow: Browser -> Frontend -->
-        <path d="M 108 128 L 108 158" class="arrow arrow-data" />
+        <path d="M 128 116 L 128 142" class="arrow arrow-data" />
 
-        <!-- API Container -->
-        <rect x="28" y="300" width="160" height="100" class="box box-backend" />
-        <text x="108" y="328" text-anchor="middle" class="box-label">Backend API</text>
-        <text x="108" y="344" text-anchor="middle" class="box-sublabel">Express 4 + TypeScript</text>
-        <text x="108" y="358" text-anchor="middle" class="box-sublabel">Drizzle ORM + Zod</text>
-        <rect x="44" y="368" width="56" height="16" rx="3" class="tag-bg-green" />
-        <text x="72" y="379" text-anchor="middle" class="tech-tag" fill="white">Port 3000</text>
-        <rect x="106" y="368" width="70" height="16" rx="3" class="tag-bg-green" />
-        <text x="141" y="379" text-anchor="middle" class="tech-tag" fill="white">Swagger UI</text>
+        <!-- Frontend Container -->
+        <rect x="28" y="144" width="200" height="96" class="box box-frontend" />
+        <text x="128" y="168" text-anchor="middle" class="box-label">Frontend</text>
+        <text x="128" y="184" text-anchor="middle" class="box-sublabel">React 19 + TypeScript</text>
+        <text x="128" y="198" text-anchor="middle" class="box-sublabel">Vite 7 + Tailwind CSS 4</text>
+        <rect x="48" y="208" width="56" height="16" rx="3" class="tag-bg-cyan" />
+        <text x="76" y="219" text-anchor="middle" class="tech-tag" fill="white">Dev: Vite</text>
+        <rect x="110" y="208" width="100" height="16" rx="3" class="tag-bg-cyan" />
+        <text x="160" y="219" text-anchor="middle" class="tech-tag" fill="white">Prod: nginx</text>
 
         <!-- Arrow: Frontend -> API -->
-        <path d="M 108 260 L 108 298" class="arrow arrow-data" />
-        <text x="118" y="283" class="arrow-label">HTTP /api/*</text>
+        <path d="M 128 240 L 128 270" class="arrow arrow-data" />
+        <text x="138" y="259" class="arrow-label">HTTP /api/*</text>
 
-        <!-- Database -->
-        <rect x="28" y="436" width="160" height="48" class="box box-database" />
-        <text x="108" y="460" text-anchor="middle" class="box-label">PostgreSQL 16</text>
-        <rect x="56" y="468" width="104" height="14" rx="3" class="tag-bg-yellow" />
-        <text x="108" y="478" text-anchor="middle" class="tech-tag" fill="white">Port 5432 + Volume</text>
+        <!-- API Container -->
+        <rect x="28" y="272" width="200" height="96" class="box box-backend" />
+        <text x="128" y="296" text-anchor="middle" class="box-label">Backend API</text>
+        <text x="128" y="312" text-anchor="middle" class="box-sublabel">Express 4 + TypeScript</text>
+        <text x="128" y="326" text-anchor="middle" class="box-sublabel">Drizzle ORM + Zod</text>
+        <rect x="48" y="338" width="72" height="16" rx="3" class="tag-bg-green" />
+        <text x="84" y="349" text-anchor="middle" class="tech-tag" fill="white">Port 3000</text>
+        <rect x="126" y="338" width="84" height="16" rx="3" class="tag-bg-green" />
+        <text x="168" y="349" text-anchor="middle" class="tech-tag" fill="white">Swagger UI</text>
 
         <!-- Arrow: API -> DB -->
-        <path d="M 108 400 L 108 434" class="arrow arrow-data" />
-        <text x="118" y="422" class="arrow-label">SQL (Drizzle)</text>
+        <path d="M 128 368 L 128 398" class="arrow arrow-data" />
+        <text x="138" y="387" class="arrow-label">SQL (Drizzle)</text>
 
-        <!-- Key constraints box -->
-        <rect x="228" y="56" width="296" height="148" class="box" fill="#ffffff" stroke="#e5e7eb" />
-        <text x="244" y="78" class="box-label" font-size="12">Key Constraints</text>
+        <!-- Database -->
+        <rect x="28" y="400" width="200" height="52" class="box box-database" />
+        <text x="128" y="422" text-anchor="middle" class="box-label">PostgreSQL 16</text>
+        <rect x="56" y="432" width="144" height="14" rx="3" class="tag-bg-yellow" />
+        <text x="128" y="442" text-anchor="middle" class="tech-tag" fill="white">Port 5432 + persistent volume</text>
 
-        <text x="244" y="100" class="box-sublabel" font-size="10">Unique email per member (DB UNIQUE)</text>
-        <text x="244" y="120" class="box-sublabel" font-size="10">One active membership (partial unique index</text>
-        <text x="256" y="134" class="box-sublabel" font-size="10">+ application SELECT...FOR UPDATE lock)</text>
-        <text x="244" y="154" class="box-sublabel" font-size="10">Check-in requires active membership (service check</text>
-        <text x="256" y="168" class="box-sublabel" font-size="10">+ DB trigger validates member/membership match)</text>
-        <text x="244" y="188" class="box-sublabel" font-size="10">Soft-delete for members (is_deleted flag)</text>
+        <!-- ===== DEPLOY ARROWS (clean middle space) ===== -->
 
-        <!-- Docker Compose box -->
-        <rect x="228" y="224" width="296" height="84" class="box box-docker" />
-        <text x="244" y="246" class="box-label" font-size="12">Docker Compose Services</text>
-        <text x="244" y="266" class="box-sublabel" font-size="10">db: postgres:16-alpine (healthcheck + volume)</text>
-        <text x="244" y="282" class="box-sublabel" font-size="10">api: Node 20 Alpine (tsx watch, hot reload)</text>
-        <text x="244" y="298" class="box-sublabel" font-size="10">frontend: Node 20 Alpine (Vite HMR)</text>
+        <path d="M 228 188 L 558 100" class="arrow arrow-deploy" />
+        <text x="350" y="128" class="arrow-label" fill="#a855f7">Deploy: S3 + invalidation</text>
 
-        <!-- Tech stack summary box -->
-        <rect x="228" y="328" width="296" height="156" class="box" fill="#ffffff" stroke="#e5e7eb" />
-        <text x="244" y="350" class="box-label" font-size="12">Tech Stack</text>
+        <path d="M 228 316 L 558 246" class="arrow arrow-deploy" />
+        <text x="340" y="268" class="arrow-label" fill="#a855f7">Deploy: ECR push + ECS update</text>
 
-        <text x="244" y="372" class="box-sublabel" font-size="10" font-weight="600" fill="#374151">Frontend</text>
-        <text x="244" y="388" class="box-sublabel" font-size="10">React 19 · React Router 7 · Tailwind CSS 4</text>
-        <text x="244" y="404" class="box-sublabel" font-size="10">Vite 7 · Vitest + React Testing Library</text>
-
-        <text x="244" y="426" class="box-sublabel" font-size="10" font-weight="600" fill="#374151">Backend</text>
-        <text x="244" y="442" class="box-sublabel" font-size="10">Express 4 · Drizzle ORM · Zod validation</text>
-        <text x="244" y="458" class="box-sublabel" font-size="10">Swagger/OpenAPI · Vitest + Supertest</text>
-
-        <text x="244" y="478" class="box-sublabel" font-size="10" font-weight="600" fill="#374151">120+ tests across frontend and backend</text>
+        <path d="M 228 426 L 558 380" class="arrow arrow-deploy" />
+        <text x="340" y="416" class="arrow-label" fill="#a855f7">Migrate: Drizzle Kit → RDS</text>
 
         <!-- ===== AWS SIDE ===== -->
 
         <!-- CloudFront + S3 -->
-        <rect x="580" y="56" width="200" height="96" class="box box-aws" />
-        <text x="680" y="80" text-anchor="middle" class="box-label">CloudFront + S3</text>
-        <text x="680" y="96" text-anchor="middle" class="box-sublabel">Static SPA hosting + CDN</text>
-        <text x="680" y="112" text-anchor="middle" class="box-sublabel">HTTPS, edge caching</text>
-        <rect x="624" y="122" width="112" height="14" rx="3" class="tag-bg-purple" />
-        <text x="680" y="132" text-anchor="middle" class="tech-tag" fill="white">React build output</text>
-
-        <!-- ECS Fargate -->
-        <rect x="580" y="192" width="200" height="100" class="box box-aws" />
-        <text x="680" y="218" text-anchor="middle" class="box-label">ECS Fargate</text>
-        <text x="680" y="234" text-anchor="middle" class="box-sublabel">Express API containers</text>
-        <text x="680" y="250" text-anchor="middle" class="box-sublabel">Auto-scaling, no server management</text>
-        <rect x="610" y="260" width="140" height="16" rx="3" class="tag-bg-purple" />
-        <text x="680" y="271" text-anchor="middle" class="tech-tag" fill="white">Node 20 + TypeScript</text>
+        <rect x="560" y="56" width="200" height="96" class="box box-aws" />
+        <text x="660" y="80" text-anchor="middle" class="box-label">CloudFront + S3</text>
+        <text x="660" y="96" text-anchor="middle" class="box-sublabel">Static SPA hosting + CDN</text>
+        <text x="660" y="112" text-anchor="middle" class="box-sublabel">HTTPS, edge caching</text>
+        <rect x="604" y="122" width="112" height="14" rx="3" class="tag-bg-purple" />
+        <text x="660" y="132" text-anchor="middle" class="tech-tag" fill="white">React build output</text>
 
         <!-- Arrow: CloudFront -> ECS -->
-        <path d="M 680 152 L 680 190" class="arrow" stroke="#a855f7" style="marker-end: url(#arrowhead-purple)" />
-        <text x="690" y="176" class="arrow-label" fill="#a855f7">/api/* origin</text>
+        <path d="M 660 152 L 660 192" class="arrow" stroke="#a855f7" style="marker-end: url(#arrowhead-purple)" />
+        <text x="670" y="177" class="arrow-label" fill="#a855f7">/api/* origin</text>
 
-        <!-- RDS -->
-        <rect x="580" y="332" width="200" height="76" class="box box-aws" />
-        <text x="680" y="356" text-anchor="middle" class="box-label">RDS PostgreSQL</text>
-        <text x="680" y="372" text-anchor="middle" class="box-sublabel">Managed database</text>
-        <text x="680" y="388" text-anchor="middle" class="box-sublabel">Multi-AZ, automated backups</text>
-        <rect x="618" y="396" width="124" height="14" rx="3" class="tag-bg-purple" />
-        <text x="680" y="406" text-anchor="middle" class="tech-tag" fill="white">Private subnet, VPC</text>
+        <!-- ECS Fargate -->
+        <rect x="560" y="194" width="200" height="100" class="box box-aws" />
+        <text x="660" y="220" text-anchor="middle" class="box-label">ECS Fargate</text>
+        <text x="660" y="236" text-anchor="middle" class="box-sublabel">Express API containers</text>
+        <text x="660" y="252" text-anchor="middle" class="box-sublabel">Auto-scaling, serverless</text>
+        <rect x="590" y="264" width="140" height="16" rx="3" class="tag-bg-purple" />
+        <text x="660" y="275" text-anchor="middle" class="tech-tag" fill="white">Node 20 + TypeScript</text>
 
         <!-- Arrow: ECS -> RDS -->
-        <path d="M 680 292 L 680 330" class="arrow" stroke="#a855f7" style="marker-end: url(#arrowhead-purple)" />
-        <text x="690" y="316" class="arrow-label" fill="#a855f7">Private VPC</text>
+        <path d="M 660 294 L 660 336" class="arrow" stroke="#a855f7" style="marker-end: url(#arrowhead-purple)" />
+        <text x="670" y="320" class="arrow-label" fill="#a855f7">Private VPC</text>
 
-        <!-- AWS extras -->
-        <rect x="810" y="56" width="190" height="172" class="box" fill="#faf5ff" stroke="#d8b4fe" />
-        <text x="826" y="78" class="box-label" font-size="11">Supporting Services</text>
-        <text x="826" y="100" class="box-sublabel" font-size="10">Route 53: DNS + domain</text>
-        <text x="826" y="118" class="box-sublabel" font-size="10">ACM: TLS certificates</text>
-        <text x="826" y="136" class="box-sublabel" font-size="10">ECR: Docker image registry</text>
-        <text x="826" y="154" class="box-sublabel" font-size="10">CloudWatch: Logs + metrics</text>
-        <text x="826" y="172" class="box-sublabel" font-size="10">Secrets Manager: DB creds</text>
-        <text x="826" y="190" class="box-sublabel" font-size="10">VPC: Network isolation</text>
-        <text x="826" y="208" class="box-sublabel" font-size="10">WAF: API rate limiting</text>
+        <!-- RDS -->
+        <rect x="560" y="338" width="200" height="76" class="box box-aws" />
+        <text x="660" y="362" text-anchor="middle" class="box-label">RDS PostgreSQL</text>
+        <text x="660" y="378" text-anchor="middle" class="box-sublabel">Managed database</text>
+        <text x="660" y="394" text-anchor="middle" class="box-sublabel">Multi-AZ, automated backups</text>
 
-        <!-- Deploy arrows from local to AWS -->
-        <path d="M 188 196 Q 420 110 578 90" class="arrow arrow-deploy" style="marker-end: url(#arrowhead-purple)" />
-        <text x="360" y="115" class="arrow-label" fill="#a855f7">Deploy: S3 + CloudFront invalidation</text>
+        <!-- Supporting Services -->
+        <rect x="790" y="56" width="116" height="358" class="box" fill="#faf5ff" stroke="#d8b4fe" />
+        <text x="848" y="80" text-anchor="middle" class="box-label" font-size="11">Supporting</text>
+        <text x="848" y="96" text-anchor="middle" class="box-label" font-size="11">Services</text>
 
-        <path d="M 188 345 Q 420 310 578 240" class="arrow arrow-deploy" style="marker-end: url(#arrowhead-purple)" />
-        <text x="340" y="305" class="arrow-label" fill="#a855f7">Deploy: ECR push + ECS rolling update</text>
+        <text x="800" y="124" class="box-sublabel" font-size="10">Route 53</text>
+        <text x="800" y="140" class="box-sublabel" font-size="9" fill="#9ca3af">DNS + domain</text>
 
-        <path d="M 188 460 Q 420 440 578 375" class="arrow arrow-deploy" style="marker-end: url(#arrowhead-purple)" />
-        <text x="350" y="445" class="arrow-label" fill="#a855f7">Migrate: Drizzle Kit → RDS</text>
+        <text x="800" y="164" class="box-sublabel" font-size="10">ACM</text>
+        <text x="800" y="180" class="box-sublabel" font-size="9" fill="#9ca3af">TLS certificates</text>
+
+        <text x="800" y="204" class="box-sublabel" font-size="10">ECR</text>
+        <text x="800" y="220" class="box-sublabel" font-size="9" fill="#9ca3af">Docker registry</text>
+
+        <text x="800" y="244" class="box-sublabel" font-size="10">CloudWatch</text>
+        <text x="800" y="260" class="box-sublabel" font-size="9" fill="#9ca3af">Logs + metrics</text>
+
+        <text x="800" y="284" class="box-sublabel" font-size="10">Secrets Manager</text>
+        <text x="800" y="300" class="box-sublabel" font-size="9" fill="#9ca3af">DB credentials</text>
+
+        <text x="800" y="324" class="box-sublabel" font-size="10">VPC</text>
+        <text x="800" y="340" class="box-sublabel" font-size="9" fill="#9ca3af">Network isolation</text>
+
+        <text x="800" y="364" class="box-sublabel" font-size="10">WAF</text>
+        <text x="800" y="380" class="box-sublabel" font-size="9" fill="#9ca3af">Rate limiting</text>
 
       </svg>
     </div>
