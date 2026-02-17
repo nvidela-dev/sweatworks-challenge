@@ -53,5 +53,37 @@ services:
     profiles:
       - prod
 
+  # Frontend (development)
+  frontend:
+    build:
+      context: ./frontend
+      target: development
+    container_name: sweatworks-frontend
+    ports:
+      - '5173:5173'
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://api:3000
+    volumes:
+      - ./frontend/src:/app/src:ro
+      - ./frontend/index.html:/app/index.html:ro
+      - ./frontend/vite.config.ts:/app/vite.config.ts:ro
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # Frontend (production)
+  frontend-prod:
+    build:
+      context: ./frontend
+      target: production
+    container_name: sweatworks-frontend-prod
+    ports:
+      - '8080:80'
+    depends_on:
+      - api
+    profiles:
+      - prod
+
 volumes:
   postgres_data:

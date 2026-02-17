@@ -1,6 +1,6 @@
-# Sweatworks Fitness Member Management API
+# Sweatworks Fitness Member Management
 
-A REST API for managing gym members, memberships, plans, and check-ins.
+A full-stack application for managing gym members, memberships, plans, and check-ins.
 
 ## Quick Start
 
@@ -9,10 +9,10 @@ A REST API for managing gym members, memberships, plans, and check-ins.
 - Docker and Docker Compose
 - Make (optional, but recommended)
 
-### Running the API
+### Running the Application
 
 ```bash
-# Start the API and database
+# Start the full stack (API + DB + Frontend)
 make start
 
 # Run database migrations
@@ -22,7 +22,10 @@ make db-migrate
 make db-seed
 ```
 
-The API will be available at **http://localhost:3000**
+**Access Points:**
+- **Frontend**: http://localhost:5173
+- **API**: http://localhost:3000
+- **API Docs (Swagger)**: http://localhost:3000/api/docs
 
 ### Verify It's Working
 
@@ -33,20 +36,22 @@ curl http://localhost:3000/api/health
 # List members
 curl http://localhost:3000/api/members
 
-# List plans
-curl http://localhost:3000/api/plans
+# Or open http://localhost:5173 in your browser
 ```
 
 ## Available Commands
 
 | Command | Description |
 |---------|-------------|
-| `make start` | Start the API and database |
+| `make start` | Start the full stack (API + DB + Frontend) |
 | `make stop` | Stop all services |
 | `make restart` | Restart all services |
 | `make logs` | View API logs (follow mode) |
-| `make test` | Run unit tests |
-| `make lint` | Run linter |
+| `make frontend-logs` | View Frontend logs (follow mode) |
+| `make test` | Run API unit tests |
+| `make frontend-test` | Run Frontend unit tests |
+| `make lint` | Run API linter |
+| `make build` | Build production Docker images |
 | `make db-migrate` | Run database migrations |
 | `make db-seed` | Seed database with sample data |
 | `make db-reset` | Reset database (drop + migrate + seed) |
@@ -77,7 +82,7 @@ curl http://localhost:3000/api/plans
 
 ## Running Without Docker
 
-If you prefer to run locally:
+### Backend
 
 ```bash
 cd backend
@@ -90,23 +95,46 @@ npm run db:seed
 npm run dev
 ```
 
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
 ## Running Tests
 
 ```bash
-# With Docker
+# API tests (with Docker)
 make test
 
-# Without Docker
+# Frontend tests (with Docker)
+make frontend-test
+
+# API tests (without Docker)
 cd backend && npm test
+
+# Frontend tests (without Docker)
+cd frontend && npm run test:run
 ```
 
 ## Tech Stack
 
+### Backend
 - **Runtime**: Node.js 20 with TypeScript
 - **Framework**: Express.js
 - **Database**: PostgreSQL 16 with Drizzle ORM
 - **Validation**: Zod
 - **Testing**: Vitest + Supertest
+- **Documentation**: Swagger/OpenAPI
+
+### Frontend
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Routing**: React Router
+- **Styling**: Tailwind CSS
+- **Testing**: Vitest + React Testing Library
 
 ## Project Structure
 
@@ -124,7 +152,28 @@ cd backend && npm test
 │   │   └── middleware/    # Express middleware
 │   ├── Dockerfile
 │   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── api/           # API client layer
+│   │   ├── components/    # Shared UI components
+│   │   │   ├── ui/        # Base UI components
+│   │   │   └── layout/    # Layout components
+│   │   ├── features/      # Feature modules
+│   │   │   ├── members/
+│   │   │   ├── memberships/
+│   │   │   └── check-ins/
+│   │   └── types/         # TypeScript types
+│   ├── Dockerfile
+│   └── package.json
 ├── docker-compose.yml
 ├── Makefile
 └── README.md
 ```
+
+## Frontend Routes
+
+| Route | Description |
+|-------|-------------|
+| `/` | Redirects to `/members` |
+| `/members` | List all members with search |
+| `/members/:id` | View member profile |
