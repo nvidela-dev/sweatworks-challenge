@@ -8,14 +8,20 @@ import { useMembersList } from './useMembersList';
 
 export function MembersPage() {
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const { members, meta, loading, error, refetch } = useMembersList({
     page,
-    pageSize: 10,
+    pageSize,
     search: search || undefined,
   });
+
+  const handlePageSizeChange = useCallback((newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
+  }, []);
 
   // useCallback here completes the memo chain with MemberSearch
   const handleSearch = useCallback((query: string) => {
@@ -55,11 +61,14 @@ export function MembersPage() {
       ) : (
         <>
           <MembersList members={members} />
-          {meta && meta.totalPages > 1 && (
+          {meta && (
             <Pagination
               page={meta.page}
               totalPages={meta.totalPages}
+              pageSize={pageSize}
+              totalCount={meta.totalCount}
               onPageChange={setPage}
+              onPageSizeChange={handlePageSizeChange}
               hasNext={meta.hasNext}
               hasPrev={meta.hasPrev}
             />
